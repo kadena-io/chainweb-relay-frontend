@@ -17,10 +17,10 @@ const savedNetwork = localStorage.getItem('network');
 const savedSlippage = localStorage.getItem('slippage');
 const savedSigning = localStorage.getItem('signing');
 const savedTtl = localStorage.getItem('ttl');
-const CHAIN_ID = "2";
+const CHAIN_ID = "0";
 const PRECISION = 12;
-const NETWORK_ID = 'mainnet01';
-const network = `https://api.chainweb.com/chainweb/0.0/${NETWORK_ID}/chain/${CHAIN_ID}/pact`;
+const NETWORK_ID = 'testnet04';
+const network = `https://api.testnet.chainweb.com/chainweb/0.0/${NETWORK_ID}/chain/${CHAIN_ID}/pact`;
 
 const creationTime = () => Math.round((new Date).getTime()/1000)-10;
 const GAS_PRICE = 0.000000000001;

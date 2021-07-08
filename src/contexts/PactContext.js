@@ -16,8 +16,11 @@ export const PactProvider = (props) => {
   const [transaction, setTransaction] = useState(null);
   const [localRes, setLocalRes] = useState(null);
   const [bondInfo, setBondInfo] = useState({});
+  const [poolInfo, setPoolInfo] = useState({});
+  const [bondsInfo, setBondsInfo] = useState([]);
+  const [allBonds, setAllBonds] = useState([]);
   const [tvl, setTVL] = useState(0);
-
+  const [bondDetails, setBondDetails] = useState([])
   let wallet = useContext(WalletContext);
   const {
     creationTime, apiHost, signing, GAS_PRICE, account, privKey,
@@ -33,7 +36,11 @@ export const PactProvider = (props) => {
 
   useEffect(()=> {
     getTVL();
+    getPool();
+    getAllBonds();
+    getBondDetails();
   }, [])
+
 
   const getBond = async (bond) => {
     const cmd = {
@@ -54,27 +61,93 @@ export const PactProvider = (props) => {
     } catch (e){
       console.log(e)
     }
-
   }
 
 
-    const getTVL = async () => {
-      const cmd = {
-          pactCode: `(fold (+) 0.0 (map (compose (relay.pool.get-bond) (at 'balance )) (at 'active (relay.pool.get-pool relay.relay.POOL))))`,
-          meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
-          chainId: CHAIN_ID,
+
+  const getPool = async (bond) => {
+    const cmd = {
+        pactCode: `(relay.pool.get-pool relay.relay.POOL)`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+        envData: {
+          bond: bond
         }
-      try {
-        let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
-        console.log(data)
-        if (data.result.status === "success") {
-          setTVL(data.result.data)
-          return true;
-        }
-        else return false;
-      } catch (e){
-        console.log(e)
       }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setPoolInfo(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
+  }
+
+  const getAllBonds = async (bond) => {
+    const cmd = {
+        pactCode: `(keys relay.pool.bonds)`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+        envData: {
+          bond: bond
+        }
+      }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setAllBonds(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
+  }
+
+  const getBondDetails = async () => {
+    const cmd = {
+        pactCode: ` (namespace "user")
+         (module m g
+           (defcap g () 1)
+           (defun f (k)
+             { "key": k
+         , "bond": (relay.pool.get-bond k) }))
+         (map (f) (at "active" (relay.pool.get-pool "kda-relay-pool")))
+         `,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+      }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setBondDetails(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
+  }
+
+  const getTVL = async () => {
+    const cmd = {
+        pactCode: `(fold (+) 0.0 (map (compose (relay.pool.get-bond) (at 'balance )) (at 'active (relay.pool.get-pool relay.relay.POOL))))`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+      }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setTVL(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
   }
 
   const newBond = async (acct, keys) => {
@@ -323,7 +396,10 @@ export const PactProvider = (props) => {
       <PactContext.Provider
         value={{
           getBond,
+          allBonds,
+          bondDetails,
           bondInfo,
+          poolInfo,
           tvl,
           newBond,
           unBond,

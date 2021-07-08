@@ -6,20 +6,21 @@ import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import SimpleSign from './SimpleSign'
+import BondDetail from './BondDetail'
 import Relay from './Relay'
 
 function Home() {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const network = wallet.NETWORK_ID === "mainnet01" ? "mainnet" : "testnet";
- 
+
   const {requestState, requestKey, response, localRes, error} = pact;
   const [key, setKey] = useState("");
   const [bond, setBond] = useState("");
   const [bondExist, setBondExist] = React.useState(false);
   const [publicKeys, setPublicKeys] = useState([]);
   const totalBonded = pact.tvl;
-
+  console.log(pact.bondDetails)
   useEffect(()=> {
     setKey("")
     if(wallet.account.guard && wallet.account.guard.keys){
@@ -231,6 +232,16 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
+              <div  style={{marginTop: 30}}>
+                <h5>All Bonds</h5>
+                <List divided inverted relaxed style={{width: 600, margin: "auto"}}>
+                  {pact.allBonds.filter(b => b.includes(wallet.account.account+":")).map(bond => {
+                    return <BondDetail bond={bond}/>
+                  })
+                  }
+                </List>
+              </div>
+
             </Form.Field>
           </Form>
           <Relay/>
