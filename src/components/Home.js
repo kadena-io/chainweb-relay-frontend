@@ -20,7 +20,7 @@ function Home() {
   const [bondExist, setBondExist] = React.useState(false);
   const [publicKeys, setPublicKeys] = useState([]);
   const totalBonded = pact.tvl;
-  console.log(pact.bondDetails)
+
   useEffect(()=> {
     setKey("")
     if(wallet.account.guard && wallet.account.guard.keys){
@@ -111,7 +111,7 @@ function Home() {
          {`${totalBonded/1000000} MM KDA TVL`}
         </h5>
         <header className="App-header">
-          <img src={require("../kadena.png")} style={{height:100, marginBottom: 10}}/>
+          <img src="kadena.png" style={{height:100, marginBottom: 10}}/>
           <h1>
             Kadena {network === "mainnet" ? "" : "Testnet"} Chain Relay
           </h1>
@@ -169,7 +169,6 @@ function Home() {
                 style={{
                   backgroundColor: "#18A33C",
                   color: "white",
-                  width: 360,
                 }}
                 onClick={() => {
                   pact.newBond(wallet.account.account, publicKeys)
@@ -179,37 +178,6 @@ function Home() {
               </Button>
             </Form.Field>
 
-            <Form.Field  style={{ marginTop: "20px", marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}} >
-            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left" }}>
-              Unbond / Renew Bond
-            </label>
-              <Form.Input
-                style={{ width: "360px" }}
-                icon='money bill alternate outline'
-                iconPosition='left'
-                placeholder='Bond Name'
-                value={bond}
-                onChange={async e => {
-                  setBond(e.target.value)
-                  let res = await pact.getBond(e.target.value);
-                  if (res) setBondExist(true);
-                }}
-              />
-            </Form.Field>
-            <Form.Field style={{marginTop: 10, marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}  >
-              <SimpleSign
-                disabled={bond === ""}
-                activity="Unbond"
-                bond={bond}
-                bondExist={bondExist}
-              />
-              <SimpleSign
-                disabled={bond === ""}
-                activity="Renew"
-                bond={bond}
-                bondExist={bondExist}
-              />
-            </Form.Field>
 
             <Form.Field style={{width: 670, margin: "auto"}}>
               <Message
@@ -232,15 +200,49 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
-              <div  style={{marginTop: 30}}>
+
+              <div  style={{marginTop: 30, margin: "auto"}}>
                 <h5>All Bonds</h5>
-                <List divided inverted relaxed style={{width: 600, margin: "auto"}}>
-                  {pact.allBonds.filter(b => b.includes(wallet.account.account+":")).map(bond => {
-                    return <BondDetail bond={bond}/>
+                <List divided inverted relaxed style={{width: 800, margin: "auto"}}>
+                  <List.Item>Bonds</List.Item>
+                  {pact.allBonds.filter(b => b.key.includes(wallet.account.account+":")).map(bond => {
+                    let achieved=false;
+                    if (bond.bond.activity && pact.poolInfo.activity){
+                      achieved = bond.bond.activity.int >= pact.poolInfo.activity.int;
+                    }
+                    return (
+                      <List.Item style={{ display: "inline-block", color: (achieved ? "green": "red")}}>
+                        <BondDetail bond={bond} style={{color: (achieved ? "green": "red")}} />
+                      </List.Item>
+                    )
                   })
                   }
                 </List>
               </div>
+
+              <Form.Field  style={{ marginTop: "20px", marginBottom: 10, width: "500px", marginLeft: "auto", marginRight: "auto", display: "inline-flex"}} >
+                <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left" }}>
+                  Search other bonds...
+                </label>
+                  <Form.Input
+                    style={{ width: "360px" }}
+                    icon='money bill alternate outline'
+                    iconPosition='left'
+                    placeholder='Bond Name'
+                    value={bond}
+                    onChange={async e => {
+                      setBond(e.target.value)
+                      let res = await pact.getBond(e.target.value);
+                      if (res) setBondExist(true);
+                    }}
+                  />
+                  <SimpleSign
+                    disabled={bond === ""}
+                    activity="Search"
+                    bond={bond}
+                    bondExist={bondExist}
+                  />
+              </Form.Field>
 
             </Form.Field>
           </Form>

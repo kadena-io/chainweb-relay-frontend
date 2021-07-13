@@ -5,6 +5,7 @@ import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import Pact from 'pact-lang-api';
+import SimpleSign from './SimpleSign'
 
 const BondDetail = (props) => {
   const pact = useContext(PactContext);
@@ -13,35 +14,57 @@ const BondDetail = (props) => {
   const [firstOpen, setFirstOpen] = React.useState(false)
   const [secondOpen, setSecondOpen] = React.useState(false)
   const [key, setKey] = React.useState(false);
-  const {activity, bond, bondExist} = props;
+  const {bond, bondExist, style} = props;
 
-
-  useEffect(() => {
-    pact.getBond(props.bond);
-  }, [])
-
+  console.log(bond.bond)
   const BondInfo = () => {
     return(
-      <List>
+      <List style={{margin: "20px"}}>
+        <List.Item>
+          <List.Header>Bond Name</List.Header>
+          <List.Description>{bond.key} </List.Description>
+        </List.Item>
         <List.Item>
           <List.Header>Pool</List.Header>
-          <List.Description>{pact.bondInfo.pool} </List.Description>
+          <List.Description>{bond.bond.pool} </List.Description>
         </List.Item>
         <List.Item>
-          <List.Header>Associated KDA Account</List.Header>
-          <List.Description>{pact.bondInfo.account} </List.Description>
+          <List.Header>KDA Account</List.Header>
+          <List.Description>{bond.bond.account} </List.Description>
         </List.Item>
         <List.Item>
-          <List.Header>Bond Balance</List.Header>
-          <List.Description>{pact.bondInfo.balance} </List.Description>
+          <List.Header>Balance</List.Header>
+          <List.Description>{bond.bond.balance} </List.Description>
         </List.Item>
         <List.Item>
-          <List.Header>Bond Date</List.Header>
-          <List.Description>{pact.bondInfo.date && pact.bondInfo.date.timep} </List.Description>
+          <List.Header>Date</List.Header>
+          <List.Description>{bond.bond.date && bond.bond.date.timep} </List.Description>
         </List.Item>
         <List.Item>
-          <List.Header>Bond Activity</List.Header>
-          <List.Description>{pact.bondInfo.activity && pact.bondInfo.activity.int} </List.Description>
+          <List.Header>Elapsed</List.Header>
+          <List.Description>{bond.bond.date && Math.floor((new Date()*60-new Date(bond.bond.date.timep))/(60*60*60*60*60*60*24))} </List.Description>
+        </List.Item>
+        <List.Item>
+          <List.Header>Activity</List.Header>
+          <List.Description>{bond.bond.activity && bond.bond.activity.int} </List.Description>
+        </List.Item>
+        <List.Item>
+          <List.Header>Renewed</List.Header>
+          <List.Description>{bond.bond.renewed && bond.bond.renewed.int} </List.Description>
+        </List.Item>
+        <List.Item>
+          <List.Header>Remaining Lockup</List.Header>
+          <List.Description>{bond.bond.lockup && bond.bond.lockup.int} </List.Description>
+        </List.Item>
+        <List.Item>
+          <SimpleSign
+            disabled={bond === ""}
+            activity="Renew"
+            bond={bond}/>
+          <SimpleSign
+            disabled={bond === ""}
+            activity="Unbond"
+            bond={bond}/>
         </List.Item>
       </List>
     )
@@ -54,24 +77,27 @@ const BondDetail = (props) => {
         open={firstOpen}
         style={{width: "1000px", margin: 40}}
         trigger={
-          <List.Item as="a">{props.bond}</List.Item>
+          <List.Header as="a" >
+            <p style={{...style}}>{bond.key}</p>
+          </List.Header>
         }
       >
         <Modal.Header style={{textAlign:'center'}}>
-        {activity}<br/>"{bond}"
+          Bond Details
+          <br/>
         </Modal.Header>
         <Modal.Content >
           <Modal.Description>
             <BondInfo
-            style={{marginLeft: "10px"}}/>
+              style={{marginLeft: "10px"}}/>
           </Modal.Description>
         </Modal.Content>
 
 
         <Modal
-        onClose={() => setSecondOpen(false)}
-        open={secondOpen}
-        style={{width: "700px"}}
+          onClose={() => setSecondOpen(false)}
+          open={secondOpen}
+          style={{width: "700px"}}
         >
         <Modal.Header>Sign with your Bond key</Modal.Header>
         <Modal.Content >

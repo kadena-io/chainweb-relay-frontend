@@ -5,6 +5,7 @@ import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import Pact from 'pact-lang-api';
+
 const SimpleSign = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
@@ -12,7 +13,7 @@ const SimpleSign = (props) => {
   const [firstOpen, setFirstOpen] = React.useState(false)
   const [secondOpen, setSecondOpen] = React.useState(false)
   const [key, setKey] = React.useState(false);
-  const {activity, bond, bondExist} = props;
+  const {activity, bond, bondExist, style} = props;
 
   const BondInfo = () => {
     return(
@@ -50,11 +51,10 @@ const SimpleSign = (props) => {
         style={{width: "750px", margin: 40}}
         trigger={
           <Button
-            disabled={!bondExist}
-            style={{
+            buttonStyle={{
               backgroundColor: "#18A33C",
               color: "white",
-              width: 170,
+              width:"80"
             }}
           >
           {activity}

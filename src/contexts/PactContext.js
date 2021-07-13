@@ -19,8 +19,10 @@ export const PactProvider = (props) => {
   const [poolInfo, setPoolInfo] = useState({});
   const [bondsInfo, setBondsInfo] = useState([]);
   const [allBonds, setAllBonds] = useState([]);
+  const [bond, setBond] = useState("")
   const [tvl, setTVL] = useState(0);
   const [bondDetails, setBondDetails] = useState([])
+
   let wallet = useContext(WalletContext);
   const {
     creationTime, apiHost, signing, GAS_PRICE, account, privKey,
@@ -38,11 +40,10 @@ export const PactProvider = (props) => {
     getTVL();
     getPool();
     getAllBonds();
-    getBondDetails();
   }, [])
 
 
-  const getBond = async (bond) => {
+  const getBond = async () => {
     const cmd = {
         pactCode: `(relay.pool.get-bond (read-msg 'bond))`,
         meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
@@ -86,44 +87,16 @@ export const PactProvider = (props) => {
     }
   }
 
-  const getAllBonds = async (bond) => {
+  const getAllBonds = async () => {
     const cmd = {
-        pactCode: `(keys relay.pool.bonds)`,
+        pactCode: `(use relay.pool) (map (get-keyed-bond) (bond-keys))`,
         meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
         chainId: CHAIN_ID,
-        envData: {
-          bond: bond
-        }
       }
     try {
       let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
       if (data.result.status === "success") {
         setAllBonds(data.result.data)
-        return true;
-      }
-      else return false;
-    } catch (e){
-      console.log(e)
-    }
-  }
-
-  const getBondDetails = async () => {
-    const cmd = {
-        pactCode: ` (namespace "user")
-         (module m g
-           (defcap g () 1)
-           (defun f (k)
-             { "key": k
-         , "bond": (relay.pool.get-bond k) }))
-         (map (f) (at "active" (relay.pool.get-pool "kda-relay-pool")))
-         `,
-        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
-        chainId: CHAIN_ID,
-      }
-    try {
-      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
-      if (data.result.status === "success") {
-        setBondDetails(data.result.data)
         return true;
       }
       else return false;
@@ -396,8 +369,9 @@ export const PactProvider = (props) => {
       <PactContext.Provider
         value={{
           getBond,
+          bond,
+          setBond,
           allBonds,
-          bondDetails,
           bondInfo,
           poolInfo,
           tvl,

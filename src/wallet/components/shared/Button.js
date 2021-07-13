@@ -26,11 +26,12 @@ const Button = ({ props, disabled, buttonStyle, background, color, fontSize, chi
       disabled={disabled}
       background={background}
       color={color}
-      fontSize={fontSize}
-      style={buttonStyle}
+      fontSize={{...fontSize}}
+      style={{...buttonStyle}}
       onClick={onClick}
       loading={loading}
       hover={hover}
+
     >
       {children}
     </StyledButton>
