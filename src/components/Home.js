@@ -12,7 +12,7 @@ function Home() {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const network = wallet.NETWORK_ID === "mainnet01" ? "mainnet" : "testnet";
- 
+
   const {requestState, requestKey, response, localRes, error} = pact;
   const [key, setKey] = useState("");
   const [bond, setBond] = useState("");
@@ -110,7 +110,7 @@ function Home() {
          {`${totalBonded/1000000} MM KDA TVL`}
         </h5>
         <header className="App-header">
-          <img src={require("../kadena.png")} style={{height:100, marginBottom: 10}}/>
+          <img src={"kadena.png"} style={{height:100, marginBottom: 10}}/>
           <h1>
             Kadena {network === "mainnet" ? "" : "Testnet"} Chain Relay
           </h1>
