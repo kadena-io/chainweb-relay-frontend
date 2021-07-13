@@ -3,7 +3,7 @@ import Pact from 'pact-lang-api';
 import { WalletContext } from "../wallet/contexts/WalletContext"
 
 const BOND_AMOUNT = 50000;
-const GAS_LIMIT = 3000;
+const GAS_LIMIT = 6000;
 
 export const PactContext = createContext();
 
