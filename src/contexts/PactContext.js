@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect, createContext }  from 'react';
 import Pact from 'pact-lang-api';
 import { WalletContext } from "../wallet/contexts/WalletContext"
-
-const BOND_AMOUNT = 50000;
-const GAS_LIMIT = 6000;
+import configData from "../config.json";
+const GAS_LIMIT = configData.meta.gasLimit;
 
 export const PactContext = createContext();
 
@@ -19,6 +18,8 @@ export const PactProvider = (props) => {
   const [tvl, setTVL] = useState(0);
 
   let wallet = useContext(WalletContext);
+  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
+
   const {
     creationTime, apiHost, signing, GAS_PRICE, account, privKey,
     pwPrompt,
@@ -66,7 +67,6 @@ export const PactProvider = (props) => {
         }
       try {
         let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
-        console.log(data)
         if (data.result.status === "success") {
           setTVL(data.result.data)
           return true;

@@ -9,6 +9,7 @@ import pwPrompt from '../components/alerts/pwPrompt'
 import walletError from '../components/alerts/walletError'
 import walletSigError from '../components/alerts/walletSigError'
 import walletLoading from '../components/alerts/walletLoading'
+import configData from "../../config.json";
 
 export const WalletContext = createContext();
 const savedAcct = localStorage.getItem('acct');
@@ -17,11 +18,9 @@ const savedNetwork = localStorage.getItem('network');
 const savedSlippage = localStorage.getItem('slippage');
 const savedSigning = localStorage.getItem('signing');
 const savedTtl = localStorage.getItem('ttl');
-const CHAIN_ID = "2";
-const PRECISION = 12;
-const NETWORK_ID = 'mainnet01';
-const network = `https://api.chainweb.com/chainweb/0.0/${NETWORK_ID}/chain/${CHAIN_ID}/pact`;
 
+const version = (process.env.NODE_ENV==="production" && process.env.REACT_APP_VERSION!== "testnet") ? "mainnet" : "testnet";
+const {CHAIN_ID, NETWORK_ID} = configData[version];
 const creationTime = () => Math.round((new Date).getTime()/1000)-10;
 const GAS_PRICE = 0.000000000001;
 const apiHost = (networkId, chainId) => {
@@ -29,6 +28,8 @@ const apiHost = (networkId, chainId) => {
   if(networkId === "mainnet01") node = "api.chainweb.com"
   return `https://${node}/chainweb/0.0/${networkId}/chain/${chainId}/pact`
 }
+
+const network = apiHost(NETWORK_ID, CHAIN_ID)
 
 
 
