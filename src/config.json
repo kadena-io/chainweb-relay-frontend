@@ -1,0 +1,15 @@
+{
+  "testnet": {
+    "CHAIN_ID": "0",
+    "NETWORK_ID": "testnet04",
+    "bondAmount": "20"
+  },
+  "mainnet": {
+    "CHAIN_ID": "2",
+    "NETWORK_ID": "mainnet01",
+    "bondAmount": "50000"
+  },
+  "meta": {
+    "gasLimit": 6000
+  }
+}

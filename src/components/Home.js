@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import '../App.css';
-import { Button as SUIButton, Form, Message, Icon, List, Input, Label } from 'semantic-ui-react';
+import { Button as SUIButton, Form, Message, Icon, List, Input, Label, Divider, Accordion, Segment } from 'semantic-ui-react';
 import Button from '../wallet/components/shared/Button';
 // import { Wallet } from '../../../wallet/Wallet.js'
 import { PactContext } from "../contexts/PactContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import SimpleSign from './SimpleSign'
-import BondDetail from './BondDetail'
+import BondInfo from './BondInfo'
 import Relay from './Relay'
 
 function Home() {
@@ -20,6 +20,10 @@ function Home() {
   const [bondExist, setBondExist] = React.useState(false);
   const [publicKeys, setPublicKeys] = useState([]);
   const totalBonded = pact.tvl;
+  const userBonds = pact.allBonds.filter(b => b.key.includes(wallet.account.account+":"));
+
+  const [openBond, setOpenBond] = useState("")
+
 
   useEffect(()=> {
     setKey("")
@@ -47,7 +51,6 @@ function Home() {
         </div>
       )
     }
-
 
    const renderRes = (res) => {
      if (!res) {
@@ -138,7 +141,6 @@ function Home() {
                 icon='key'
                 iconPosition='left'
                 placeholder='Bond Guard (Enter Public Key)'
-                value={key}
                 onChange={(e) => setKey(e.target.value)}
                 action= {
                   <SUIButton
@@ -200,49 +202,52 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
-
-              <div  style={{marginTop: 30, margin: "auto"}}>
-                <h5>All Bonds</h5>
-                <List divided inverted relaxed style={{width: 800, margin: "auto"}}>
-                  <List.Item>Bonds</List.Item>
-                  {pact.allBonds.filter(b => b.key.includes(wallet.account.account+":")).map(bond => {
-                    let achieved=false;
-                    if (bond.bond.activity && pact.poolInfo.activity){
-                      achieved = bond.bond.activity.int >= pact.poolInfo.activity.int;
+              {userBonds.length ?
+                <div style={{marginTop: 30, margin: "auto"}}>
+                  <Divider/>
+                  <h5>All Bonds</h5>
+                  <List style={{ margin: "auto"}} divided>
+                    <div>
+                    {userBonds.map(bond => {
+                      let achieved=false;
+                      if (bond.bond.activity && pact.poolInfo.activity){
+                        achieved = bond.bond.activity.int >= pact.poolInfo.activity.int;
+                      }
+                      return (
+                        <List.Item key={bond}>
+                          <Accordion
+                            active={openBond===bond.key}
+                            onClick={() => {
+                              if (bond.key === openBond) {
+                                setOpenBond("")
+                              } else {
+                                setOpenBond(bond.key)
+                              }
+                            }}
+                          >
+                            <Accordion.Title
+                              >
+                              <List.Header style={{color: (achieved ? "green": "red"), margin: 5}}>
+                                <Icon name='dropdown' />
+                                {bond.key}
+                              </List.Header>
+                            </Accordion.Title>
+                            <Accordion.Content active={openBond===bond.key}>
+                              <Segment inverted tertiary raised>
+                                <BondInfo bond={bond}/>
+                              </Segment>
+                            </Accordion.Content>
+                          </Accordion>
+                        </List.Item>
+                      )
+                    })
                     }
-                    return (
-                      <List.Item style={{ display: "inline-block", color: (achieved ? "green": "red")}}>
-                        <BondDetail bond={bond} style={{color: (achieved ? "green": "red")}} />
-                      </List.Item>
-                    )
-                  })
-                  }
-                </List>
-              </div>
-
-              <Form.Field  style={{ marginTop: "20px", marginBottom: 10, width: "500px", marginLeft: "auto", marginRight: "auto", display: "inline-flex"}} >
-                <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left" }}>
-                  Search other bonds...
-                </label>
-                  <Form.Input
-                    style={{ width: "360px" }}
-                    icon='money bill alternate outline'
-                    iconPosition='left'
-                    placeholder='Bond Name'
-                    value={bond}
-                    onChange={async e => {
-                      setBond(e.target.value)
-                      let res = await pact.getBond(e.target.value);
-                      if (res) setBondExist(true);
-                    }}
-                  />
-                  <SimpleSign
-                    disabled={bond === ""}
-                    activity="Search"
-                    bond={bond}
-                    bondExist={bondExist}
-                  />
-              </Form.Field>
+                    </div>
+                  </List>
+                </div>
+                :
+                ""
+              }
 
             </Form.Field>
           </Form>

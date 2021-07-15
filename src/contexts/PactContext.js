@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect, createContext }  from 'react';
 import Pact from 'pact-lang-api';
 import { WalletContext } from "../wallet/contexts/WalletContext"
-
-const BOND_AMOUNT = 50000;
-const GAS_LIMIT = 3000;
+import configData from "../config.json";
+const GAS_LIMIT = configData.meta.gasLimit;
 
 export const PactContext = createContext();
 
@@ -35,6 +34,7 @@ export const PactProvider = (props) => {
     CHAIN_ID
   } = wallet;
 
+  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
 
   useEffect(()=> {
     getTVL();

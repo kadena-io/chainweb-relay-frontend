@@ -1,18 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react';
 import '../App.css';
-import { Modal, Form, Message, Icon, List, Input, Label } from 'semantic-ui-react';
+import { Button as SUIButton, Modal, Form, Message, Icon, List, Input, Label } from 'semantic-ui-react';
 import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import Pact from 'pact-lang-api';
 
-const SimpleSign = (props) => {
+const Rotate = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
 
-  const [firstOpen, setFirstOpen] = React.useState(false)
-  const [secondOpen, setSecondOpen] = React.useState(false)
-  const [key, setKey] = React.useState(false);
+  const [firstOpen, setFirstOpen] = useState(false)
+  const [secondOpen, setSecondOpen] = useState(false)
+  const [key, setKey] = useState(false);
+  const [publicKey, setPublicKey] = useState("");
+  const [publicKeys, setPublicKeys] = useState([]);
+
   const {activity, bond, bondInfo, bondExist, style} = props;
 
   const BondInfo = () => {
@@ -27,17 +30,47 @@ const SimpleSign = (props) => {
           <List.Description>{bondInfo.account} </List.Description>
         </List.Item>
         <List.Item>
-          <List.Header>Bond Balance</List.Header>
-          <List.Description>{bondInfo.balance} </List.Description>
+          <List.Header>Bond Guard</List.Header>
+          <List.Description>{JSON.stringify(bondInfo.guard)} </List.Description>
         </List.Item>
-        <List.Item>
-          <List.Header>Bond Date</List.Header>
-          <List.Description>{bondInfo.date && bondInfo.date.timep} </List.Description>
-        </List.Item>
-        <List.Item>
-          <List.Header>Bond Activity</List.Header>
-          <List.Description>{bondInfo.activity && bondInfo.activity.int} </List.Description>
-        </List.Item>
+        <Form>
+          <Form.Field
+            style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
+            >
+            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "360px", }}>
+              Enter a new key to rotate and sign with current key
+            </label>
+            <Input
+              value={publicKey}
+              error={wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
+              style={{width: "360px"}}
+              icon='key'
+              iconPosition='left'
+              placeholder='New Bond Guard (Enter Public Key)'
+              onChange={(e) => setPublicKey(e.target.value)}
+              action= {
+                <SUIButton
+                  disabled={publicKey.length  !== 64 || publicKeys.indexOf(publicKey)!==-1 || (false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey))}
+                  icon="add"
+                  onClick={() => {
+                    setPublicKeys([...publicKeys, publicKey])
+                    setPublicKey("")
+                  }}
+                />
+              }
+            />
+            {(false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey))
+              ?
+              <Label pointing color="red" hidden >
+                Please use a key that is not used in your Kadena account
+              </Label>
+              : ""
+            }
+            <List celled style={{overflowX: "auto"}}>
+            {publicKeys.map(item =>  <List.Item icon='key' style={{color: "white"}} content={item} key={item}/>)}
+           </List>
+          </Form.Field>
+        </Form>
       </List>
     )
   }
@@ -186,4 +219,4 @@ const SimpleSign = (props) => {
   )
 }
 
-export default SimpleSign
+export default Rotate
