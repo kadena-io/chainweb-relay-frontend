@@ -193,12 +193,12 @@ const Rotate = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.unBond(bondInfo.account, bond, key, false)
+                pact.rotateBond(bondInfo.account, bond, key, false)
               }}
               primary
               disabled={key.length!==64}
               >
-              Unbond with Bond Private Key
+              Rotate with Bond Private Key
             </Button>
           </div>
           :
@@ -207,12 +207,12 @@ const Rotate = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.renewBond(bond, key, false)
+                pact.rotateBond(bond, key, false)
               }}
               primary
               disabled={key.length!==64}
               >
-              Renew with Private Key
+              Rotate with Private Key
             </Button>
           </div>
         }
