@@ -36,3 +36,44 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.bheader {
+  padding-bottom: 10px;
+  color: black;
+}
+
+
+.App-header.btable {
+  table-layout: fixed;
+  padding-bottom: 5px;
+}
+
+
+.blabel {
+  text-transform: lowercase;
+  white-space: nowrap;
+  text-align: right;
+  width: 10%;
+  font-weight: lighter;
+  color: grey;
+}
+
+
+.bvalue {
+  text-align: left;
+  width: 25%;
+  font-weight: bold;
+  color: black;
+}
+
+.blong {
+  text-overflow: ellipsis;
+  text-align: left;
+  font-weight: bold;
+  color: green;
+  width: 200px;
+  overflow: clip;
+  max-width: 200px;
+}

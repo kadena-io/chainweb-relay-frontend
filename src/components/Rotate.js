@@ -43,7 +43,7 @@ const Rotate = (props) => {
               Enter a new key to rotate to and sign with current key
             </label>
             <Input
-              error={wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
+              error={false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
               style={{width: "360px"}}
               icon='key'
               iconPosition='left'
@@ -53,7 +53,7 @@ const Rotate = (props) => {
               }}
               action= {
                 <SUIButton
-                  disabled={publicKey.length  !== 64 || publicKeys.indexOf(publicKey)!==-1 || (false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey))}
+                  disabled={publicKey.length !== 64 || publicKeys.indexOf(publicKey)!==-1 || (false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey))}
                   icon="add"
                   onClick={() => {
                     setPublicKeys([...publicKeys, publicKey])
@@ -81,7 +81,9 @@ const Rotate = (props) => {
   return (
     //First Modal
     <Modal
-        onClose={() => setFirstOpen(false)}
+        onClose={() => {
+          setFirstOpen(false)
+        }}
         onOpen={() => {
           setFirstOpen(true)
         }}
@@ -115,6 +117,9 @@ const Rotate = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 pact.rotateBond(bond, key, publicKeys)
+                setPublicKey("")
+                setPublicKeys([])
+                setKey("")
               }}
               primary
               >
@@ -135,7 +140,10 @@ const Rotate = (props) => {
             <Button
               onClick={() => {
                 setFirstOpen(false)
-                pact.rotateBond(bond, key, publicKeys, false)
+                pact.rotateBond(bond, key, publicKeys)
+                setPublicKey("")
+                setPublicKeys([])
+                setKey("")
               }}
               primary
               >
@@ -154,7 +162,12 @@ const Rotate = (props) => {
         </Modal.Actions>
 
         <Modal
-          onClose={() => setSecondOpen(false)}
+          onClose={() => {
+            setSecondOpen(false)
+            setPublicKey("")
+            setPublicKeys([])
+            setKey("")
+          }}
           open={secondOpen}
           style={{width: "700px"}}
         >
@@ -180,9 +193,7 @@ const Rotate = (props) => {
               value={key}
               placeholder="Enter Bond Private Key"
               style={{width: "360px"}}
-              onChange={(e) => {
-                setKey(e.target.value)
-              }}
+              onChange={(e) => {setKey(e.target.value)}}
             />
           </Modal.Description>
         </Modal.Content>
@@ -193,7 +204,10 @@ const Rotate = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.rotateBond(bondInfo.account, bond, key, false)
+                pact.rotateBond(bond, key, publicKeys, false)
+                setPublicKey("")
+                setPublicKeys([])
+                setKey("")
               }}
               primary
               disabled={key.length!==64}
@@ -207,7 +221,10 @@ const Rotate = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.rotateBond(bond, key, false)
+                pact.rotateBond(bond, key, publicKeys, false)
+                setPublicKey("")
+                setPublicKeys([])
+                setKey("")
               }}
               primary
               disabled={key.length!==64}

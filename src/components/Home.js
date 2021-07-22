@@ -199,26 +199,25 @@ function Home() {
                       return (
                         <List.Item key={bond.key}>
                           <Accordion
-                            inverted
                             active={(openBond===bond.key).toString()}
-                            onClick={(firstOpen || secondOpen) ? () => {} :
-                              () => {
-                                if (bond.key === openBond) {
-                                  setOpenBond("")
-                                } else {
-                                  setOpenBond(bond.key)
-                                }
-                              }
-                            }
                           >
-                            <Accordion.Title>
+                            <Accordion.Title
+                              onClick={(firstOpen || secondOpen) ? () => {} :
+                                () => {
+                                  if (bond.key === openBond) {
+                                    setOpenBond("")
+                                  } else {
+                                    setOpenBond(bond.key)
+                                  }
+                                }
+                              }>
                               <List.Header style={{color: (achieved ? "green": "red"), margin: 5}}>
                                 <Icon name='dropdown' />
                                 {bond.key}
                               </List.Header>
                             </Accordion.Title>
                             <Accordion.Content active={openBond===bond.key}>
-                              <Segment tertiary raised>
+                              <Segment style={{backgroundColor: "#DCDDDE"}}>
                                 <BondInfo bond={bond}/>
                               </Segment>
                             </Accordion.Content>
