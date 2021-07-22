@@ -202,6 +202,35 @@ export const PactProvider = (props) => {
       }
     }
 
+
+  const rotateBond = async (bond, key, newKeys, signWallet=true) => {
+    const cmd = {
+        pactCode: `(relay.pool.rotate (read-msg 'bond) (read-keyset 'ks))`,
+        caps: [
+          Pact.lang.mkCap("Gas Station", "free gas", "relay.gas-station.GAS_PAYER", ["free-gas", {int: 1}, 1.0]),
+          Pact.lang.mkCap("Rotate capability", "Rotate the bond guard", `relay.pool.ROTATE`, [bond]),
+        ],
+        sender: 'relay-free-gas',
+        gasLimit: GAS_LIMIT,
+        gasPrice: GAS_PRICE,
+        networkId: NETWORK_ID,
+        chainId: CHAIN_ID,
+        ttl: 1000,
+        signingPubKey: wallet.account.guard.keys[0],
+        envData: {
+          bond: bond,
+          ks: {
+            pred: "keys-any",
+            keys: newKeys
+          }
+        }
+      }
+      if (signWallet) sendBondWallet(cmd);
+      else {
+        sendBondLocal(cmd, key);
+      }
+    }
+
   const sendBondLocal = async (signCmd, key) => {
     try {
       let privKey = key || signing.key
@@ -378,6 +407,7 @@ export const PactProvider = (props) => {
           newBond,
           unBond,
           renewBond,
+          rotateBond,
           bondAccount,
           requestState,
           error,

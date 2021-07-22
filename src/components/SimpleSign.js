@@ -3,15 +3,16 @@ import '../App.css';
 import { Modal, Form, Message, Icon, List, Input, Label } from 'semantic-ui-react';
 import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
+import { ModalContext } from "../contexts/ModalContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import Pact from 'pact-lang-api';
 
 const SimpleSign = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
+  const modal = useContext(ModalContext);
 
-  const [firstOpen, setFirstOpen] = React.useState(false)
-  const [secondOpen, setSecondOpen] = React.useState(false)
+  const {firstOpen, setFirstOpen, secondOpen, setSecondOpen} = modal;
   const [key, setKey] = React.useState(false);
   const {activity, bond, bondInfo, bondExist, style} = props;
 
@@ -43,14 +44,13 @@ const SimpleSign = (props) => {
   }
 
   return (
-    //First Modal
     <Modal
         onClose={() => setFirstOpen(false)}
         onOpen={() => {
           setFirstOpen(true)
         }}
         open={firstOpen}
-        style={{width: "750px", margin: 40}}
+        style={{width: "900px", margin: 40}}
         trigger={
           <Button
             buttonStyle={{
@@ -87,7 +87,6 @@ const SimpleSign = (props) => {
             <Button
               onClick={() => {
                 setSecondOpen(true)
-                // setOpen(false)
               }}
               primary
               >

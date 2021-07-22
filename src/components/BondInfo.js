@@ -60,7 +60,7 @@ const BondInfo = (props) => {
           bondInfo={bond.bond}
           />
         <SimpleSign
-          disabled={bond === ""}
+          disabled={bond.key === ""}
           activity="Unbond"
           bond={bond.key}
           bondInfo={bond.bond}

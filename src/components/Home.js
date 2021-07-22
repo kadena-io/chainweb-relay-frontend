@@ -4,6 +4,7 @@ import { Button as SUIButton, Form, Message, Icon, List, Input, Label, Divider, 
 import Button from '../wallet/components/shared/Button';
 // import { Wallet } from '../../../wallet/Wallet.js'
 import { PactContext } from "../contexts/PactContext";
+import { ModalContext } from "../contexts/ModalContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import SimpleSign from './SimpleSign'
 import BondInfo from './BondInfo'
@@ -13,7 +14,9 @@ function Home() {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const network = wallet.NETWORK_ID === "mainnet01" ? "mainnet" : "testnet";
+  const modal = useContext(ModalContext);
 
+  const {firstOpen, secondOpen} = modal;
   const {requestState, requestKey, response, localRes, error} = pact;
   const [key, setKey] = useState("");
   const [bond, setBond] = useState("");
@@ -165,7 +168,7 @@ function Home() {
              </List>
             </Form.Field>
 
-            <Form.Field style={{marginTop: -10, marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}  >
+            <Form.Field style={{marginTop: 10, marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}  >
               <Button
                 disabled={wallet.account.account === "" || wallet.account.account === null || publicKeys.length === 0}
                 style={{
@@ -182,7 +185,57 @@ function Home() {
 
 
             <Form.Field style={{width: 670, margin: "auto"}}>
+              {userBonds.length ?
+                <div style={{marginTop: 30, margin: "auto"}}>
+                  <Divider/>
+                  <h5>All Bonds</h5>
+                  <List style={{ margin: "auto"}} divided>
+                    <div>
+                    {userBonds.map(bond => {
+                      let achieved=false;
+                      if (bond.bond.activity && pact.poolInfo.activity){
+                        achieved = bond.bond.activity.int >= pact.poolInfo.activity.int;
+                      }
+                      return (
+                        <List.Item key={bond.key}>
+                          <Accordion
+                            inverted
+                            active={(openBond===bond.key).toString()}
+                            onClick={(firstOpen || secondOpen) ? () => {} :
+                              () => {
+                                if (bond.key === openBond) {
+                                  setOpenBond("")
+                                } else {
+                                  setOpenBond(bond.key)
+                                }
+                              }
+                            }
+                          >
+                            <Accordion.Title>
+                              <List.Header style={{color: (achieved ? "green": "red"), margin: 5}}>
+                                <Icon name='dropdown' />
+                                {bond.key}
+                              </List.Header>
+                            </Accordion.Title>
+                            <Accordion.Content active={openBond===bond.key}>
+                              <Segment tertiary raised>
+                                <BondInfo bond={bond}/>
+                              </Segment>
+                            </Accordion.Content>
+                          </Accordion>
+                        </List.Item>
+                      )
+                    })
+                    }
+                    </div>
+                  </List>
+                </div>
+                :
+                ""
+              }
+              <Divider/>
               <Message
+                style={{marginTop: 10}}
                 success={status().success}
                 warning={status().warning}
                 error={status().error}
@@ -202,52 +255,6 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
-              {userBonds.length ?
-                <div style={{marginTop: 30, margin: "auto"}}>
-                  <Divider/>
-                  <h5>All Bonds</h5>
-                  <List style={{ margin: "auto"}} divided>
-                    <div>
-                    {userBonds.map(bond => {
-                      let achieved=false;
-                      if (bond.bond.activity && pact.poolInfo.activity){
-                        achieved = bond.bond.activity.int >= pact.poolInfo.activity.int;
-                      }
-                      return (
-                        <List.Item key={bond}>
-                          <Accordion
-                            active={openBond===bond.key}
-                            onClick={() => {
-                              if (bond.key === openBond) {
-                                setOpenBond("")
-                              } else {
-                                setOpenBond(bond.key)
-                              }
-                            }}
-                          >
-                            <Accordion.Title
-                              >
-                              <List.Header style={{color: (achieved ? "green": "red"), margin: 5}}>
-                                <Icon name='dropdown' />
-                                {bond.key}
-                              </List.Header>
-                            </Accordion.Title>
-                            <Accordion.Content active={openBond===bond.key}>
-                              <Segment inverted tertiary raised>
-                                <BondInfo bond={bond}/>
-                              </Segment>
-                            </Accordion.Content>
-                          </Accordion>
-                        </List.Item>
-                      )
-                    })
-                    }
-                    </div>
-                  </List>
-                </div>
-                :
-                ""
-              }
 
             </Form.Field>
           </Form>

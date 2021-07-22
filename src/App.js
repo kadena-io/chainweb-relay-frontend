@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from "./components/Home";
 import { PactProvider } from "./contexts/PactContext";
+import { ModalProvider } from "./contexts/ModalContext";
 
 import { ThemeProvider } from 'styled-components';
 import { theme } from './wallet/styles/theme';
@@ -19,7 +20,9 @@ function App() {
           <GlobalStyle />
           <Layout>
             <PactProvider>
-              <Home/>
+              <ModalProvider>
+                <Home/>
+              </ModalProvider>
             </PactProvider>
           </Layout>
         </WalletProvider>

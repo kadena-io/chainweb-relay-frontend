@@ -3,16 +3,18 @@ import '../App.css';
 import { Button as SUIButton, Modal, Form, Message, Icon, List, Input, Label } from 'semantic-ui-react';
 import Button from '../wallet/components/shared/Button';
 import { PactContext } from "../contexts/PactContext";
+import { ModalContext } from "../contexts/ModalContext";
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import Pact from 'pact-lang-api';
 
 const Rotate = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
+  const modal = useContext(ModalContext);
 
-  const [firstOpen, setFirstOpen] = useState(false)
-  const [secondOpen, setSecondOpen] = useState(false)
-  const [key, setKey] = useState(false);
+  const {firstOpen, setFirstOpen, secondOpen, setSecondOpen} = modal;
+
+  const [key, setKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [publicKeys, setPublicKeys] = useState([]);
 
@@ -38,16 +40,17 @@ const Rotate = (props) => {
             style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
             >
             <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "360px", }}>
-              Enter a new key to rotate and sign with current key
+              Enter a new key to rotate to and sign with current key
             </label>
             <Input
-              value={publicKey}
               error={wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
               style={{width: "360px"}}
               icon='key'
               iconPosition='left'
               placeholder='New Bond Guard (Enter Public Key)'
-              onChange={(e) => setPublicKey(e.target.value)}
+              onBlur={(e) => {
+                setPublicKey(e.target.value)
+              }}
               action= {
                 <SUIButton
                   disabled={publicKey.length  !== 64 || publicKeys.indexOf(publicKey)!==-1 || (false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey))}
@@ -67,7 +70,7 @@ const Rotate = (props) => {
               : ""
             }
             <List celled style={{overflowX: "auto"}}>
-            {publicKeys.map(item =>  <List.Item icon='key' style={{color: "white"}} content={item} key={item}/>)}
+            {publicKeys.map(item =>  <List.Item icon='key' content={item} key={item+"key"}/>)}
            </List>
           </Form.Field>
         </Form>
@@ -83,7 +86,7 @@ const Rotate = (props) => {
           setFirstOpen(true)
         }}
         open={firstOpen}
-        style={{width: "750px", margin: 40}}
+        style={{width: "900px", margin: 40}}
         trigger={
           <Button
             buttonStyle={{
@@ -111,7 +114,7 @@ const Rotate = (props) => {
             <Button
               onClick={() => {
                 setFirstOpen(false)
-                pact.unBond(bondInfo.account, bond, key)
+                pact.rotateBond(bond, key, publicKeys)
               }}
               primary
               >
@@ -132,7 +135,7 @@ const Rotate = (props) => {
             <Button
               onClick={() => {
                 setFirstOpen(false)
-                pact.renewBond(bond, key)
+                pact.rotateBond(bond, key, publicKeys, false)
               }}
               primary
               >
@@ -151,9 +154,9 @@ const Rotate = (props) => {
         </Modal.Actions>
 
         <Modal
-        onClose={() => setSecondOpen(false)}
-        open={secondOpen}
-        style={{width: "500px"}}
+          onClose={() => setSecondOpen(false)}
+          open={secondOpen}
+          style={{width: "700px"}}
         >
         <Modal.Header>Sign with your Bond key</Modal.Header>
         <Modal.Content >
@@ -174,9 +177,12 @@ const Rotate = (props) => {
               Note: Pasting your private key is not safe. Do you want to continue?
             </p>
             <Input
+              value={key}
               placeholder="Enter Bond Private Key"
               style={{width: "360px"}}
-              onChange={(e) => setKey(e.target.value)}
+              onChange={(e) => {
+                setKey(e.target.value)
+              }}
             />
           </Modal.Description>
         </Modal.Content>
