@@ -26,7 +26,7 @@ const BondInfo = (props) => {
   let renewDate = bondDateNum ? new Date().setDate(bondDateNum+lockup) : date;
   let unbondDate = bondDateNum ? new Date().setDate(bondDateNum+lockup+unlock) : date;
 
- 
+
   return(
     <div role="list" class="ui divided list" style={{margin: "10px"}}>
       <div class="bheader">
@@ -37,7 +37,7 @@ const BondInfo = (props) => {
         <tbody>
           <tr class="bitem">
             <td class="blabel">Bond Name</td>
-            <td colspan="3" class="blong bname">{bond.key.length > 64 ? bond.key.slice(0,32)+ "..."+bond.key.slice(45): bond.key}
+            <td colspan="3" class="blong bname">{bond.key.length > 64 ? bond.key.slice(0,30)+ "..."+bond.key.slice(45): bond.key}
             </td>
           </tr>
           <tr class="bitem">
@@ -56,7 +56,7 @@ const BondInfo = (props) => {
             <td class="blabel">Activity</td>
             <td class="bvalue">{bond.bond.activity && bond.bond.activity.int}</td>
             <td class="blabel">APY</td>
-            <td class="bvalue">{bond.bond.rate && (bond.bond.rate*100).toString().slice(0,5)}%</td>
+            <td class="bvalue">{bond.bond.rate && (bond.bond.rate*100*365).toString().slice(0,5)}%</td>
           </tr>
           <tr class="bitem">
             <td class="blabel">Date</td>
