@@ -24,7 +24,7 @@ const BondInfo = (props) => {
   let date = new Date();
   let renewDate = new Date();
   let unbondDate = new Date();
-  if (bondDate) {
+  if (bondDate === bond.bond.date.timep) {
     let bondDateFormat = new Date(bondDate)
     renewDate = new Date(renewDate.setDate(bondDateFormat.getDate()+lockup))
     unbondDate = new Date(unbondDate.setDate(bondDateFormat.getDate()+lockup+unlock))
