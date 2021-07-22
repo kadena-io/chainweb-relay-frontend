@@ -20,16 +20,13 @@ const BondInfo = (props) => {
   let {unlock, lockup} = pact.poolInfo;
   unlock = unlock? unlock.int : unlock;
   lockup = lockup? lockup.int : lockup;
+  let date = new Date()
   let bondDate = bond.bond.date ? bond.bond.date.timep : bond.bond.date;
-  let date = new Date();
-  let renewDate = new Date();
-  let unbondDate = new Date();
-  if (bondDate === bond.bond.date.timep) {
-    let bondDateFormat = new Date(bondDate)
-    renewDate = new Date(renewDate.setDate(bondDateFormat.getDate()+lockup))
-    unbondDate = new Date(unbondDate.setDate(bondDateFormat.getDate()+lockup+unlock))
-  }
+  let bondDateNum = new Date(bondDate).getDate()
+  let renewDate = bondDateNum ? new Date().setDate(bondDateNum+lockup) : date;
+  let unbondDate = bondDateNum ? new Date().setDate(bondDateNum+lockup+unlock) : date;
 
+ 
   return(
     <div role="list" class="ui divided list" style={{margin: "10px"}}>
       <div class="bheader">
@@ -65,11 +62,11 @@ const BondInfo = (props) => {
             <td class="blabel">Date</td>
             <td class="bvalue">{date.toISOString().slice(0,19)}</td>
             <td class="blabel">Renew</td>
-            <td class="bvalue">{renewDate.toISOString().slice(0,19)}</td>
+            <td class="bvalue">{renewDate ? new Date(renewDate).toISOString().slice(0,19) : date.toISOString()}</td>
           </tr>
           <tr class="bitem">
             <td class="blabel">Unbond</td>
-            <td class="bvalue">{unbondDate.toISOString().slice(0,19)}</td>
+            <td class="bvalue">{unbondDate ? new Date(unbondDate).toISOString().slice(0,19) : date.toISOString()}</td>
             <td class="blabel">Renewed</td>
             <td class="bvalue">{bond.bond.renewed && bond.bond.renewed.int}</td>
           </tr>
