@@ -217,7 +217,7 @@ function Home() {
                                   }
                                 }
                               }>
-                              <List.Header style={{color: (achieved ? "green": "red"), margin: 5}}>
+                              <List.Header style={{color: (achieved ? "green": "white"), margin: 5}}>
                                 <Icon name='dropdown' />
                                 {bond.key}
                               </List.Header>
