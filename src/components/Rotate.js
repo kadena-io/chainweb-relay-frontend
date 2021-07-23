@@ -40,7 +40,7 @@ const Rotate = (props) => {
             style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
             >
             <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "360px", }}>
-              Enter a new key to rotate to and sign with current key
+              Enter a new key to rotate to and sign with KDA account guard
             </label>
             <Input
               error={false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
@@ -48,7 +48,9 @@ const Rotate = (props) => {
               icon='key'
               iconPosition='left'
               placeholder='New Bond Guard (Enter Public Key)'
-              onBlur={(e) => {
+              autoFocus="autoFocus"
+              value={publicKey}
+              onChange={(e) => {
                 setPublicKey(e.target.value)
               }}
               action= {
