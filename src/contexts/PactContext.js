@@ -42,7 +42,6 @@ export const PactProvider = (props) => {
     getAllBonds();
   }, [])
 
-
   const getBond = async () => {
     const cmd = {
         pactCode: `(relay.pool.get-bond (read-msg 'bond))`,
@@ -63,7 +62,6 @@ export const PactProvider = (props) => {
       console.log(e)
     }
   }
-
 
 
   const getPool = async (bond) => {
