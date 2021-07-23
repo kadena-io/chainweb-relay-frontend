@@ -36,7 +36,6 @@ export const PactProvider = (props) => {
     CHAIN_ID
   } = wallet;
 
-  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
 
   useEffect(()=> {
     getTVL();
