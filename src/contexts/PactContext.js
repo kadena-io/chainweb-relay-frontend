@@ -15,7 +15,12 @@ export const PactProvider = (props) => {
   const [transaction, setTransaction] = useState(null);
   const [localRes, setLocalRes] = useState(null);
   const [bondInfo, setBondInfo] = useState({});
+  const [poolInfo, setPoolInfo] = useState({});
+  const [bondsInfo, setBondsInfo] = useState([]);
+  const [allBonds, setAllBonds] = useState([]);
+  const [bond, setBond] = useState("")
   const [tvl, setTVL] = useState(0);
+  const [bondDetails, setBondDetails] = useState([])
 
   let wallet = useContext(WalletContext);
   const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
@@ -31,12 +36,16 @@ export const PactProvider = (props) => {
     CHAIN_ID
   } = wallet;
 
+  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
 
   useEffect(()=> {
     getTVL();
+    getPool();
+    getAllBonds();
   }, [])
 
-  const getBond = async (bond) => {
+
+  const getBond = async () => {
     const cmd = {
         pactCode: `(relay.pool.get-bond (read-msg 'bond))`,
         meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
@@ -55,26 +64,65 @@ export const PactProvider = (props) => {
     } catch (e){
       console.log(e)
     }
-
   }
 
 
-    const getTVL = async () => {
-      const cmd = {
-          pactCode: `(fold (+) 0.0 (map (compose (relay.pool.get-bond) (at 'balance )) (at 'active (relay.pool.get-pool relay.relay.POOL))))`,
-          meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
-          chainId: CHAIN_ID,
+
+  const getPool = async (bond) => {
+    const cmd = {
+        pactCode: `(relay.pool.get-pool relay.relay.POOL)`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+        envData: {
+          bond: bond
         }
-      try {
-        let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
-        if (data.result.status === "success") {
-          setTVL(data.result.data)
-          return true;
-        }
-        else return false;
-      } catch (e){
-        console.log(e)
       }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setPoolInfo(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
+  }
+
+  const getAllBonds = async () => {
+    const cmd = {
+        pactCode: `(use relay.pool) (map (get-keyed-bond) (bond-keys))`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+      }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setAllBonds(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
+  }
+
+  const getTVL = async () => {
+    const cmd = {
+        pactCode: `(fold (+) 0.0 (map (compose (relay.pool.get-bond) (at 'balance )) (at 'active (relay.pool.get-pool relay.relay.POOL))))`,
+        meta: Pact.lang.mkMeta("", CHAIN_ID, GAS_PRICE, GAS_LIMIT, creationTime(), 1000),
+        chainId: CHAIN_ID,
+      }
+    try {
+      let data = await Pact.fetch.local(cmd, apiHost(NETWORK_ID, CHAIN_ID));
+      if (data.result.status === "success") {
+        setTVL(data.result.data)
+        return true;
+      }
+      else return false;
+    } catch (e){
+      console.log(e)
+    }
   }
 
   const newBond = async (acct, keys) => {
@@ -148,6 +196,35 @@ export const PactProvider = (props) => {
         signingPubKey: key,
         envData: {
           bond: bond
+        }
+      }
+      if (signWallet) sendBondWallet(cmd);
+      else {
+        sendBondLocal(cmd, key);
+      }
+    }
+
+
+  const rotateBond = async (bond, key, newKeys, signWallet=true) => {
+    const cmd = {
+        pactCode: `(relay.pool.rotate (read-msg 'bond) (read-keyset 'ks))`,
+        caps: [
+          Pact.lang.mkCap("Gas Station", "free gas", "relay.gas-station.GAS_PAYER", ["free-gas", {int: 1}, 1.0]),
+          Pact.lang.mkCap("Rotate capability", "Rotate the bond guard", `relay.pool.ROTATE`, [bond]),
+        ],
+        sender: 'relay-free-gas',
+        gasLimit: GAS_LIMIT,
+        gasPrice: GAS_PRICE,
+        networkId: NETWORK_ID,
+        chainId: CHAIN_ID,
+        ttl: 1000,
+        signingPubKey: wallet.account.guard.keys[0],
+        envData: {
+          bond: bond,
+          ks: {
+            pred: "keys-any",
+            keys: newKeys
+          }
         }
       }
       if (signWallet) sendBondWallet(cmd);
@@ -323,11 +400,16 @@ export const PactProvider = (props) => {
       <PactContext.Provider
         value={{
           getBond,
+          bond,
+          setBond,
+          allBonds,
           bondInfo,
+          poolInfo,
           tvl,
           newBond,
           unBond,
           renewBond,
+          rotateBond,
           bondAccount,
           requestState,
           error,
