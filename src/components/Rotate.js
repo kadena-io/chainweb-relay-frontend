@@ -85,6 +85,9 @@ const Rotate = (props) => {
     <Modal
         onClose={() => {
           setRotateFirstOpen("")
+          setPublicKey("")
+          setPublicKeys([])
+          setKey("")
         }}
         onOpen={() => {
           setRotateFirstOpen(bond)
