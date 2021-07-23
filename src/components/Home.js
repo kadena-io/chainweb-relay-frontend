@@ -14,6 +14,7 @@ function Home() {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const network = wallet.NETWORK_ID === "mainnet01" ? "mainnet" : "testnet";
+
   const modal = useContext(ModalContext);
 
   const {firstOpen, secondOpen} = modal;

@@ -23,6 +23,8 @@ export const PactProvider = (props) => {
   const [bondDetails, setBondDetails] = useState([])
 
   let wallet = useContext(WalletContext);
+  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
+
   const {
     creationTime, apiHost, signing, GAS_PRICE, account, privKey,
     pwPrompt,

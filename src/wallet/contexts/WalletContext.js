@@ -10,6 +10,7 @@ import walletError from '../components/alerts/walletError'
 import walletSigError from '../components/alerts/walletSigError'
 import walletLoading from '../components/alerts/walletLoading'
 import configData from "../../config.json";
+
 export const WalletContext = createContext();
 const savedAcct = localStorage.getItem('acct');
 const savedPrivKey = localStorage.getItem('pk');
@@ -17,7 +18,9 @@ const savedNetwork = localStorage.getItem('network');
 const savedSlippage = localStorage.getItem('slippage');
 const savedSigning = localStorage.getItem('signing');
 const savedTtl = localStorage.getItem('ttl');
+
 const PRECISION = 12;
+
 const version = (process.env.NODE_ENV==="production" && process.env.REACT_APP_VERSION!== "testnet") ? "mainnet" : "testnet";
 const {CHAIN_ID, NETWORK_ID} = configData[version];
 const creationTime = () => Math.round((new Date).getTime()/1000)-10;
