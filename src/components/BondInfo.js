@@ -81,13 +81,13 @@ const BondInfo = (props) => {
         </table>
         <br/>
         <SimpleSign
-          disabled={!renewable}
+          disabled={bond.bond.terminated || !renewable}
           activity="Renew"
           bond={bond.key}
           bondInfo={bond.bond}
           />
         <SimpleSign
-          disabled={!unbondable}
+          disabled={bond.bond.terminated || !unbondable}
           activity="Unbond"
           bond={bond.key}
           bondInfo={bond.bond}
