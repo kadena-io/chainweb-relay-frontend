@@ -24,7 +24,9 @@ function Home() {
   const [publicKeys, setPublicKeys] = useState([]);
   const totalBonded = pact.tvl;
   const userBonds = pact.allBonds
-    .filter(b => b.key.includes(wallet.account.account+":"))
+    .filter(b => {
+      return b.key.includes(wallet.account.account+":")
+    })
     .sort((a,b) => {
       if (b.key>a.key) return -1;
       else return 0;

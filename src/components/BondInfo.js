@@ -31,6 +31,8 @@ const BondInfo = (props) => {
     ? (new Date(addDay(bond.bond.date.timep, lockup))<new Date() && new Date() < new Date(addDay(bond.bond.date.timep, lockup+unlock))) : false;
   const unbondable = bond.bond.date && unlock && addDay(bond.bond.date.timep, lockup+unlock)
     ? new Date(addDay(bond.bond.date.timep, lockup+unlock))< new Date() : false;
+  const active = bond.bond.date && unlock && addDay(bond.bond.date.timep, lockup)
+    ? (new Date(addDay(bond.bond.date.timep, lockup))>new Date()) : false;
 
   return(
     <div role="list" className="ui divided list" style={{margin: "10px"}} key={bond.key}>
@@ -72,8 +74,8 @@ const BondInfo = (props) => {
             <tr className="bitem">
               <td className="blabel">Unbond</td>
               <td className="bvalue">{bond.bond.date && unlock && addDay(bond.bond.date.timep, lockup + unlock).slice(0,19)}</td>
-              <td className="blabel">Renewed</td>
-              <td className="bvalue">{bond.bond.renewed && bond.bond.renewed.int}</td>
+              <td className="blabel">Status</td>
+              <td className="bvalue">{bond.bond.terminated ? "terminated" : active ? "active" : "inactive"}</td>
             </tr>
           </tbody>
         </table>
