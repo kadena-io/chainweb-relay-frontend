@@ -36,14 +36,12 @@ export const PactProvider = (props) => {
     CHAIN_ID
   } = wallet;
 
-  const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
 
   useEffect(()=> {
     getTVL();
     getPool();
     getAllBonds();
   }, [])
-
 
   const getBond = async () => {
     const cmd = {
@@ -65,7 +63,6 @@ export const PactProvider = (props) => {
       console.log(e)
     }
   }
-
 
 
   const getPool = async (bond) => {
