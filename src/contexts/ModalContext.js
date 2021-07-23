@@ -3,16 +3,15 @@ import React, { createContext, useState } from 'react';
 export const ModalContext = createContext();
 
 export const ModalProvider = ({ children }) => {
-  const [firstOpen, setFirstOpen] = useState(false)
-  const [secondOpen, setSecondOpen] = useState(false);
-
+  const [rotateFirstOpen, setRotateFirstOpen] = useState("");
+  const [rotateSecondOpen, setRotateSecondOpen] = useState("");
   return (
     <ModalContext.Provider
       value={{
-        firstOpen,
-        setFirstOpen,
-        secondOpen,
-        setSecondOpen
+        rotateFirstOpen,
+        setRotateFirstOpen,
+        rotateSecondOpen,
+        setRotateSecondOpen
       }}
     >
       {children}

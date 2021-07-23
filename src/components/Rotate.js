@@ -12,7 +12,7 @@ const Rotate = (props) => {
   const wallet = useContext(WalletContext);
   const modal = useContext(ModalContext);
 
-  const {firstOpen, setFirstOpen, secondOpen, setSecondOpen} = modal;
+  const {rotateFirstOpen, setRotateFirstOpen, rotateSecondOpen, setRotateSecondOpen} = modal;
 
   const [key, setKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
@@ -39,8 +39,8 @@ const Rotate = (props) => {
           <Form.Field
             style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
             >
-            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "360px", }}>
-              Enter a new key to rotate to and sign with KDA account guard
+            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "400px", }}>
+              Enter a new bond key and sign with the KDA account guard
             </label>
             <Input
               error={false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
@@ -84,12 +84,12 @@ const Rotate = (props) => {
     //First Modal
     <Modal
         onClose={() => {
-          setFirstOpen(false)
+          setRotateFirstOpen("")
         }}
         onOpen={() => {
-          setFirstOpen(true)
+          setRotateFirstOpen(bond)
         }}
-        open={firstOpen}
+        open={rotateFirstOpen === bond}
         style={{width: "900px", margin: 40}}
         trigger={
           <Button
@@ -117,7 +117,7 @@ const Rotate = (props) => {
           <div >
             <Button
               onClick={() => {
-                setFirstOpen(false)
+                setRotateFirstOpen("")
                 pact.rotateBond(bond, key, publicKeys)
                 setPublicKey("")
                 setPublicKeys([])
@@ -129,7 +129,7 @@ const Rotate = (props) => {
             </Button>
             <Button
               onClick={() => {
-                setSecondOpen(true)
+                setRotateSecondOpen(bond)
                 // setOpen(false)
               }}
               primary
@@ -141,7 +141,7 @@ const Rotate = (props) => {
           <div>
             <Button
               onClick={() => {
-                setFirstOpen(false)
+                setRotateFirstOpen("")
                 pact.rotateBond(bond, key, publicKeys)
                 setPublicKey("")
                 setPublicKeys([])
@@ -153,7 +153,7 @@ const Rotate = (props) => {
             </Button>
             <Button
               onClick={() => {
-                setSecondOpen(true)
+                setRotateSecondOpen(bond)
               }}
               primary
               >
@@ -165,15 +165,15 @@ const Rotate = (props) => {
 
         <Modal
           onClose={() => {
-            setSecondOpen(false)
+            setRotateSecondOpen("")
             setPublicKey("")
             setPublicKeys([])
             setKey("")
           }}
-          open={secondOpen}
+          open={rotateSecondOpen===bond}
           style={{width: "700px"}}
         >
-        <Modal.Header>Sign with your Bond key</Modal.Header>
+        <Modal.Header>Sign with your KDA account guard</Modal.Header>
         <Modal.Content >
           <Modal.Description>
             <List>
@@ -204,8 +204,8 @@ const Rotate = (props) => {
           <div>
             <Button
               onClick={() => {
-                setFirstOpen(false)
-                setSecondOpen(false)
+                setRotateFirstOpen("")
+                setRotateSecondOpen("")
                 pact.rotateBond(bond, key, publicKeys, false)
                 setPublicKey("")
                 setPublicKeys([])
@@ -221,8 +221,8 @@ const Rotate = (props) => {
           <div>
             <Button
               onClick={() => {
-                setFirstOpen(false)
-                setSecondOpen(false)
+                setRotateFirstOpen("")
+                setRotateSecondOpen("")
                 pact.rotateBond(bond, key, publicKeys, false)
                 setPublicKey("")
                 setPublicKeys([])

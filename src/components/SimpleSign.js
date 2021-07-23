@@ -11,10 +11,10 @@ const SimpleSign = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const modal = useContext(ModalContext);
-
-  const {firstOpen, setFirstOpen, secondOpen, setSecondOpen} = modal;
+  const [firstOpen, setFirstOpen] = useState(false)
+  const [secondOpen, setSecondOpen] = useState(false);
   const [key, setKey] = React.useState(false);
-  const {activity, bond, bondInfo, bondExist, style} = props;
+  const {activity, bond, bondInfo, bondExist, style, disabled} = props;
 
   const BondInfo = () => {
     return(
@@ -33,7 +33,7 @@ const SimpleSign = (props) => {
         </List.Item>
         <List.Item>
           <List.Header>Bond Date</List.Header>
-          <List.Description>{bondInfo.date && bondInfo.date.timep} </List.Description>
+          <List.Description>{bondInfo.date && bondInfo.date.timep.slice(0,19)} </List.Description>
         </List.Item>
         <List.Item>
           <List.Header>Bond Activity</List.Header>
@@ -58,6 +58,7 @@ const SimpleSign = (props) => {
               color: "white",
               width:"80"
             }}
+            disabled={disabled}
           >
           {activity}
           </Button>
