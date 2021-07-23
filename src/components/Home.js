@@ -23,10 +23,14 @@ function Home() {
   const [bondExist, setBondExist] = React.useState(false);
   const [publicKeys, setPublicKeys] = useState([]);
   const totalBonded = pact.tvl;
-  const userBonds = pact.allBonds.filter(b => b.key.includes(wallet.account.account+":"));
+  const userBonds = pact.allBonds
+    .filter(b => b.key.includes(wallet.account.account+":"))
+    .sort((a,b) => {
+      if (b.key>a.key) return -1;
+      else return 0;
+    });
 
   const [openBond, setOpenBond] = useState("")
-
 
   useEffect(()=> {
     setKey("")
