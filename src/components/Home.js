@@ -239,7 +239,6 @@ function Home() {
                 :
                 ""
               }
-              <Search/>
               <Divider/>
               <Message
                 style={{marginTop: 10}}
@@ -262,7 +261,7 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
-
+              <Search/>
             </Form.Field>
           </Form>
           <Relay/>

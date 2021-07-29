@@ -19,7 +19,7 @@ function Search() {
               style={{marginTop: "10px", marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}
               >
               <label style={{color: "#18A33C", textAlign: "left" }}>
-                Search Other Bonds
+                Search Bonds
               </label>
               <div>
               <Input
