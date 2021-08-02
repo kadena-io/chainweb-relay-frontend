@@ -338,10 +338,11 @@ export const PactProvider = (props) => {
             setRequestKey(reqKey.requestKeys[0])
             setRequestState(3);
             return reqKey.requestKeys[0]
-          }).then(reqKey => {
+          }).then(async reqKey => {
             //Listening for result
             setRequestState(4);
-            return Pact.fetch.listen({"listen": reqKey }, apiHost(NETWORK_ID, CHAIN_ID))
+            const res =  await poll(reqKey, apiHost(NETWORK_ID, CHAIN_ID));
+            return res
           }).then(res => {
             //Result came back
             setRequestState(5);
