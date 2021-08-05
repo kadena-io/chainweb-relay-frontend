@@ -79,7 +79,7 @@ const SimpleSign = (props) => {
             <Button
               onClick={() => {
                 setFirstOpen(false)
-                pact.unBond(bondInfo.account, bond, key)
+                pact.unBond(bondInfo.account, bond, bondInfo.guard.keys[0])
               }}
               primary
               >

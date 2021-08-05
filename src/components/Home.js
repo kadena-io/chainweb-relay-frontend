@@ -9,6 +9,7 @@ import { WalletContext } from "../wallet/contexts/WalletContext"
 import SimpleSign from './SimpleSign'
 import BondInfo from './BondInfo'
 import Relay from './Relay'
+import SearchBond from './Search'
 
 function Home() {
   const pact = useContext(PactContext);
@@ -198,12 +199,11 @@ function Home() {
               </Button>
             </Form.Field>
 
-
             <Form.Field style={{width: 670, margin: "auto"}}>
               {userBonds.length ?
                 <div style={{marginTop: 30, margin: "auto"}}>
                   <Divider/>
-                  <h5>All Bonds</h5>
+                  <h5>Your Bonds</h5>
                   <List style={{ margin: "auto"}} divided>
                     <div>
                     {userBonds.map(bond => {
@@ -232,9 +232,7 @@ function Home() {
                               </List.Header>
                             </Accordion.Title>
                             <Accordion.Content active={openBond===bond.key}>
-                              <Segment style={{backgroundColor: "#DCDDDE"}}>
-                                <BondInfo bond={bond}/>
-                              </Segment>
+                              <BondInfo bond={bond}/>
                             </Accordion.Content>
                           </Accordion>
                         </List.Item>
@@ -269,7 +267,7 @@ function Home() {
                     </Button>
                   </Message>
               </Message>
-
+              <SearchBond/>
             </Form.Field>
           </Form>
           <Relay/>

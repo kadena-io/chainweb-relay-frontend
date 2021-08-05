@@ -11,12 +11,12 @@ const Rotate = (props) => {
   const pact = useContext(PactContext);
   const wallet = useContext(WalletContext);
   const modal = useContext(ModalContext);
-
   const {rotateFirstOpen, setRotateFirstOpen, rotateSecondOpen, setRotateSecondOpen} = modal;
 
   const [key, setKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [publicKeys, setPublicKeys] = useState([]);
+
 
   const {activity, bond, bondInfo, bondExist, style} = props;
 
