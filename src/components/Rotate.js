@@ -127,6 +127,7 @@ const Rotate = (props) => {
                 setKey("")
               }}
               primary
+              disabled={publicKey.length!==64 || publicKeys.length ===0}
               >
               Sign with Chainweaver / Zelcore
             </Button>
@@ -136,6 +137,7 @@ const Rotate = (props) => {
                 // setOpen(false)
               }}
               primary
+              disabled={publicKey.length!==64 || publicKeys.length ===0}
               >
               Sign with Bond Private Key (unsafe)
             </Button>
@@ -151,6 +153,7 @@ const Rotate = (props) => {
                 setKey("")
               }}
               primary
+              disabled={publicKeys.length ===0}
               >
               Sign with Chainweaver / Zelcore
             </Button>
@@ -159,6 +162,7 @@ const Rotate = (props) => {
                 setRotateSecondOpen(bond)
               }}
               primary
+              disabled={publicKeys.length ===0}
               >
               Sign with Private Key (unsafe)
             </Button>
@@ -215,7 +219,7 @@ const Rotate = (props) => {
                 setKey("")
               }}
               primary
-              disabled={key.length!==64}
+              disabled={key.length!==64 || publicKeys.length ===0}
               >
               Rotate with Bond Private Key
             </Button>
@@ -232,7 +236,7 @@ const Rotate = (props) => {
                 setKey("")
               }}
               primary
-              disabled={key.length!==64}
+              disabled={key.length!==64 || publicKeys.length ===0}
               >
               Rotate with Private Key
             </Button>

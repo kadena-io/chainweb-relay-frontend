@@ -89,6 +89,14 @@ function Home() {
         return {
           header: "Result: Success",
           content: <div><br/>
+                    {res.events &&
+                       res.events.filter(e => {
+                         return e.name === "FEE"
+                       }).length ?
+                      <h5 style={{fontWeight: "bold"}}>You've Earned {res.events.filter(e => {
+                        return e.name === "FEE"
+                      }).map(e=>e.params[2])[0]}KDA
+                      in Bond Rewards!</h5> : ""}
                      <p><b>Request Key:</b> {res.reqKey}</p>
                      <p><b>Block Height:</b> {res.metaData.blockHeight}</p>
                      <p><b>Block Hash:</b> {res.metaData.blockHash}</p>
