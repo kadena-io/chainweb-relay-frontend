@@ -72,6 +72,12 @@ const Rotate = (props) => {
               : ""
             }
             <List celled style={{overflowX: "auto"}}>
+            {publicKeys.length>0 ?
+              <SUIButton
+                onClick={()=> setPublicKeys([])}
+                content='Clear keys' icon='close' labelPosition='right' size='mini' />
+               :
+              ""}
             {publicKeys.map(item =>  <List.Item icon='key' content={item} key={item+"key"}/>)}
            </List>
           </Form.Field>

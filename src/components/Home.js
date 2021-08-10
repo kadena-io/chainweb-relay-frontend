@@ -179,9 +179,18 @@ function Home() {
                 </Label>
                 : ""
               }
+
+              {publicKeys.length>0 ?
+                <SUIButton
+                  onClick={()=> setPublicKeys([])}
+                  content='Clear keys' icon='close' labelPosition='right' size='mini' />
+                 :
+                ""}
+
               <List celled style={{overflowX: "auto"}}>
               {publicKeys.map(item =>  <List.Item icon='key' style={{color: "white"}} content={item} key={item}/>)}
              </List>
+
             </Form.Field>
 
             <Form.Field style={{marginTop: 10, marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}  >
