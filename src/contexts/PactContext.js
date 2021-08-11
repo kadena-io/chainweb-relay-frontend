@@ -157,11 +157,10 @@ export const PactProvider = (props) => {
         pactCode: `(relay.pool.unbond (read-msg 'bond))`,
         caps: [
           Pact.lang.mkCap("Gas Station", "free gas", "relay.gas-station.GAS_PAYER", ["free-gas", {int: 1}, 1.0]),
-          Pact.lang.mkCap("transfer capability", "Transfer Token to Pool", `coin.TRANSFER`, ["relay-bank", acct, BOND_AMOUNT]),
           Pact.lang.mkCap("Bonder", "Bond", "relay.pool.BONDER", [bond])
         ],
         sender: 'relay-free-gas',
-        signingPubKey: key,
+        signingPubKey: wallet.account.guard.keys[0],
         gasLimit: GAS_LIMIT,
         gasPrice: GAS_PRICE,
         networkId: NETWORK_ID,
@@ -190,7 +189,7 @@ export const PactProvider = (props) => {
         networkId: NETWORK_ID,
         chainId: CHAIN_ID,
         ttl: 1000,
-        signingPubKey: key,
+        signingPubKey: wallet.account.guard.keys[0],
         envData: {
           bond: bond
         }
