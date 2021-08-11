@@ -15,7 +15,7 @@ function Search() {
 
     return (
           <div >
-            <div style={{marginTop: "10px", marginBottom: 10, marginLeft: "auto", marginRight: "auto", width: "360px"}}>
+            <div style={{marginTop: "10px", marginBottom: 10, marginLeft: "auto", marginRight: "auto", width: "650px"}}>
               <div className="field" >
                 <label style={{color: "#18A33C", textAlign: "left", marginBottom: 5}}>
                   Search Bonds
