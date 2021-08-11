@@ -37,14 +37,13 @@ const Rotate = (props) => {
         </List.Item>
         <Form>
           <Form.Field
-            style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
+            style={{marginTop: "10px", marginBottom: 5, width: "590px", marginLeft: "auto", marginRight: "auto"}}
             >
-            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "400px", }}>
+            <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "590px", }}>
               Enter a new bond key and sign with the KDA account guard
             </label>
             <Input
               error={false && wallet.account.guard && wallet.account.guard.keys.includes(publicKey)}
-              style={{width: "360px"}}
               icon='key'
               iconPosition='left'
               placeholder='New Bond Guard (Enter Public Key)'
@@ -71,10 +70,18 @@ const Rotate = (props) => {
               </Label>
               : ""
             }
-            <List celled style={{overflowX: "auto"}}>
-            {publicKeys.map(item =>  <List.Item icon='key' content={item} key={item+"key"}/>)}
-           </List>
           </Form.Field>
+          <List celled style={{overflowX: "auto", width:560, margin: "auto"}}>
+          {publicKeys.length>0 ?
+            <div style={{ textAlign: "right", marginBottom: 10}}>
+              <SUIButton
+                onClick={()=> setPublicKeys([])}
+                content='Clear' icon='close' labelPosition='right' size='mini' />
+            </div>
+             :
+            ""}
+          {publicKeys.map(item =>  <List.Item icon='key' content={item} key={item+"key"}/>)}
+         </List>
         </Form>
       </List>
     )

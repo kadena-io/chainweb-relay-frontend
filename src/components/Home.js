@@ -148,15 +148,14 @@ function Home() {
           >
 
             <Form.Field
-              style={{marginTop: "10px", marginBottom: 5, width: "360px", marginLeft: "auto", marginRight: "auto"}}
+              style={{marginTop: "10px", marginBottom: 5, width: "600px", marginLeft: "auto", marginRight: "auto"}}
               >
-              <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left", width: "360px", }}>
+              <label style={{color: "#18A33C", marginBottom: 5, textAlign: "left" }}>
                 Create a New Bond
               </label>
               <Input
                 value={key}
                 error={wallet.account.guard && wallet.account.guard.keys.includes(key)}
-                style={{width: "360px"}}
                 icon='key'
                 iconPosition='left'
                 placeholder='Bond Guard (Enter Public Key)'
@@ -179,10 +178,19 @@ function Home() {
                 </Label>
                 : ""
               }
-              <List celled style={{overflowX: "auto"}}>
+
+            </Form.Field>
+            <List celled style={{overflowX: "auto", width: 560, margin: "auto"}}>
+            {publicKeys.length>0 ?
+              <div style={{marginTop: 10, textAlign: "right"}}>
+                <SUIButton
+                  onClick={()=> setPublicKeys([])}
+                  content='Clear' icon='close' labelPosition='right' size='mini' />
+              </div>
+               :
+              ""}
               {publicKeys.map(item =>  <List.Item icon='key' style={{color: "white"}} content={item} key={item}/>)}
              </List>
-            </Form.Field>
 
             <Form.Field style={{marginTop: 10, marginBottom: 10, width: "360px", marginLeft: "auto", marginRight: "auto"}}  >
               <Button
