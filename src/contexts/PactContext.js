@@ -152,7 +152,7 @@ export const PactProvider = (props) => {
     }
   }
 
-  const unBond = async (acct, bond, key, signWallet=true) => {
+  const unBond = async (acct, bond, pubKeyToSign, signWallet=true, privKey) => {
     const cmd = {
         pactCode: `(relay.pool.unbond (read-msg 'bond))`,
         caps: [
@@ -160,7 +160,7 @@ export const PactProvider = (props) => {
           Pact.lang.mkCap("Bonder", "Bond", "relay.pool.BONDER", [bond])
         ],
         sender: 'relay-free-gas',
-        signingPubKey: wallet.account.guard.keys[0],
+        signingPubKey: pubKeyToSign,
         gasLimit: GAS_LIMIT,
         gasPrice: GAS_PRICE,
         networkId: NETWORK_ID,
@@ -172,11 +172,11 @@ export const PactProvider = (props) => {
       }
       if (signWallet) sendBondWallet(cmd);
       else {
-        sendBondLocal(cmd, key);
+        sendBondLocal(cmd, privKey);
       }
     }
 
-  const renewBond = async (bond, key, signWallet=true) => {
+  const renewBond = async (bond, pubKeyToSign, signWallet=true, privKey) => {
     const cmd = {
         pactCode: `(relay.pool.renew (read-msg 'bond))`,
         caps: [
@@ -189,14 +189,14 @@ export const PactProvider = (props) => {
         networkId: NETWORK_ID,
         chainId: CHAIN_ID,
         ttl: 1000,
-        signingPubKey: wallet.account.guard.keys[0],
+        signingPubKey: pubKeyToSign,
         envData: {
           bond: bond
         }
       }
       if (signWallet) sendBondWallet(cmd);
       else {
-        sendBondLocal(cmd, key);
+        sendBondLocal(cmd, privKey);
       }
     }
 

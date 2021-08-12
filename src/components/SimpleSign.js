@@ -154,7 +154,7 @@ const SimpleSign = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.unBond(bondInfo.account, bond, key, false)
+                pact.unBond(bondInfo.account, bond, bondInfo.guard.keys[0], false, key)
               }}
               primary
               disabled={key.length!==64}
@@ -168,7 +168,7 @@ const SimpleSign = (props) => {
               onClick={() => {
                 setFirstOpen(false)
                 setSecondOpen(false)
-                pact.renewBond(bond, key, false)
+                pact.renewBond(bond, bondInfo.guard.keys[0], false, key)
               }}
               primary
               disabled={key.length!==64}
