@@ -67,7 +67,7 @@ const BondInfo = (props) => {
                 <td className="blabel">Activity</td>
                 <td className="bvalue">{bond.bond.activity && bond.bond.activity.int}</td>
                 <td className="blabel">APY</td>
-                <td className="bvalue">{bond.bond.rate && (bond.bond.rate*100*365).toString().slice(0,5)}%</td>
+                <td className="bvalue">{bond.bond.rate && (bond.bond.rate*100*365).toFixed(2)}%</td>
               </tr>
               <tr className="bitem">
                 <td className="blabel">Date</td>
