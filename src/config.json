@@ -1,6 +1,6 @@
 {
   "testnet": {
-    "CHAIN_ID": "0",
+    "CHAIN_ID": "1",
     "NETWORK_ID": "testnet04",
     "bondAmount": "20"
   },
