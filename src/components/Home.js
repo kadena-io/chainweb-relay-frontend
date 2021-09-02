@@ -277,8 +277,9 @@ function Home() {
               </Message>
               <SearchBond/>
             </Form.Field>
+          <Divider/>
           </Form>
-          <Relay/>
+          <Relay userBonds={userBonds}/>
         </header>
       </div>)
 }

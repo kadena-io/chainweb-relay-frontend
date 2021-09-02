@@ -176,6 +176,31 @@ export const PactProvider = (props) => {
       }
     }
 
+    const propose = async (header, bond, pubKeyToSign, signWallet=true, privKey) => {
+      const cmd = {
+          pactCode: `(relay.relay.propose (read-msg 'header) (read-msg 'bond))`,
+          caps: [
+            Pact.lang.mkCap("Gas Station", "free gas", "relay.gas-station.GAS_PAYER", ["free-gas", {int: 1}, 1.0]),
+            Pact.lang.mkCap("Bonder", "Bond", "relay.pool.BONDER", [bond])
+          ],
+          sender: 'relay-free-gas',
+          signingPubKey: pubKeyToSign,
+          gasLimit: GAS_LIMIT,
+          gasPrice: GAS_PRICE,
+          networkId: NETWORK_ID,
+          chainId: CHAIN_ID,
+          ttl: 1500,
+          envData: {
+            header: header,
+            bond: bond
+          }
+        }
+        if (signWallet) sendBondWallet(cmd);
+        else {
+          sendBondLocal(cmd, privKey);
+        }
+      }
+
   const renewBond = async (bond, pubKeyToSign, signWallet=true, privKey) => {
     const cmd = {
         pactCode: `(relay.pool.renew (read-msg 'bond))`,
@@ -413,7 +438,8 @@ export const PactProvider = (props) => {
           requestKey,
           localRes,
           response,
-          sendCmd
+          sendCmd,
+          propose
         }}
       >
         {props.children}
