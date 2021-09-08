@@ -72,6 +72,14 @@ function Home() {
          warning: true
        }
      }
+     else if (res && !res.result) {
+       return {
+         header: "Result",
+         content: JSON.stringify(res),
+         hidden: false,
+         warning: true
+       }
+     }
      else if (res.result && res.result.status === "failure") {
         return {
           header: "Result: Failure",
