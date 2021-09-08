@@ -114,6 +114,13 @@ function Home() {
           hidden: false,
           success: true
         }
+      } else {
+        return {
+          header: "Result",
+          content: JSON.stringify(res),
+          hidden: false,
+          warning: true
+        }
       }
     }
 
