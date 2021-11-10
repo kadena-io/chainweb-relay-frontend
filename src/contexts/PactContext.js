@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect, createContext }  from 'react';
 import Pact from 'pact-lang-api';
 import { WalletContext } from "../wallet/contexts/WalletContext"
-import configData from "../config.json";
-const GAS_LIMIT = configData.meta.gasLimit;
 
 export const PactContext = createContext();
 
@@ -26,7 +24,7 @@ export const PactProvider = (props) => {
   const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
 
   const {
-    creationTime, apiHost, signing, GAS_PRICE, account, privKey,
+    creationTime, apiHost, signing, GAS_PRICE, GAS_LIMIT, account, privKey,
     pwPrompt,
     walletError,
     walletSigError,

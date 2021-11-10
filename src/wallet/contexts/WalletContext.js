@@ -24,7 +24,8 @@ const PRECISION = 12;
 const version = (process.env.NODE_ENV==="production" && process.env.REACT_APP_VERSION!== "testnet") ? "mainnet" : "testnet";
 const {CHAIN_ID, NETWORK_ID} = configData[version];
 const creationTime = () => Math.round((new Date).getTime()/1000)-10;
-const GAS_PRICE = 0.000000000001;
+const GAS_PRICE = configData.meta.gasPrice;
+const GAS_LIMIT = configData.meta.gasLimit;
 const apiHost = (networkId, chainId) => {
   let node = "api.testnet.chainweb.com";
   if(networkId === "mainnet01") node = "api.chainweb.com"
