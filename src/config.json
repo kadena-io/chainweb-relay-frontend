@@ -11,7 +11,7 @@
   },
   "meta": {
     "renewGasLimit": 20000,
-    "gasLimit": 6000,
+    "gasLimit": 60000,
     "gasPrice": 0.00000001
   }
 }
