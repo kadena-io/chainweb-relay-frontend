@@ -2,8 +2,6 @@ import React, { useState, useContext, useEffect, createContext }  from 'react';
 import Pact from 'pact-lang-api';
 import { WalletContext } from "../wallet/contexts/WalletContext"
 import configData from "../config.json";
-const GAS_LIMIT = configData.meta.gasLimit;
-
 export const PactContext = createContext();
 
 export const PactProvider = (props) => {
@@ -24,9 +22,10 @@ export const PactProvider = (props) => {
 
   let wallet = useContext(WalletContext);
   const BOND_AMOUNT = wallet.NETWORK_ID==="mainnet01" ? 50000 : 20;
+  const RENEW_GAS_LIMIT = configData.meta.renewGasLimit;
 
   const {
-    creationTime, apiHost, signing, GAS_PRICE, account, privKey,
+    creationTime, apiHost, signing, GAS_PRICE, GAS_LIMIT, account, privKey,
     pwPrompt,
     walletError,
     walletSigError,
@@ -209,7 +208,7 @@ export const PactProvider = (props) => {
           Pact.lang.mkCap("Bonder", "Bond", "relay.pool.BONDER", [bond])
         ],
         sender: 'relay-free-gas',
-        gasLimit: GAS_LIMIT,
+        gasLimit: RENEW_GAS_LIMIT,
         gasPrice: GAS_PRICE,
         networkId: NETWORK_ID,
         chainId: CHAIN_ID,
