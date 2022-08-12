@@ -10,7 +10,8 @@
     "bondAmount": "50000"
   },
   "meta": {
-    "gasLimit": 9000,
-    "renewGasLimit": 20000
+    "renewGasLimit": 20000,
+    "gasLimit": 60000,
+    "gasPrice": 0.00000001
   }
 }
